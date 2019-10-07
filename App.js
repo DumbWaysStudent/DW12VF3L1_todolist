@@ -27,8 +27,8 @@ class Add extends Component {
   //masukkan inputan data ke list
   inputBtn = () =>{
     if(this.state.data !== ''){
-      let tambah = this.state.datas.concat(this.state.data)
-      this.setState({datas: tambah})
+      let insert = this.state.datas.concat(this.state.data)
+      this.setState({datas: insert})
       this.setState({data: ''})
     }else{
       alert('Field Tidak boleh kosong!')
