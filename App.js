@@ -7,44 +7,84 @@ class Add extends Component {
   constructor(props) {
     super(props)
 
-    //list data
     this.state = {
       datas: [
-        {id: 1, name: 'Work', done: false},
-        {id: 2, name: 'Swim', done: false},
-        {id: 3, name: 'Play', done: false},
-        {id: 4, name: 'Sleep', done: false},
-        {id: 5, name: 'Run', done: false},
+        {id:1, name:'Work', done: true },
+        {id:2, name:'Swim', done: true },
+        {id:3, name:'Play', done: false },
+        {id:4, name:'Swim', done: false },
+        {id:5, name:'Run', done: false },
       ],
       data: '',
+      titleBtn: 'Add',
+      editItem: 0,
+      editName:''
     }
   }
+  viewList = () => {
+    return this.state.datas.map((item) => {
+      return (
+        <ScrollView>
+          <View style={styles.direcL}>
+              <CheckBox
+                value={item.done}
+                onValueChange={() => this.onHandleCheckbox(item.id)}
+              />
 
-  //Buat View List
-  viewLists = () => {
-    return this.state.datas.map((item, index) => {
-      return(
-        <View style={{flexDirection: "row", flex: 1, borderWidth: 1, borderColor: "#E91E63", justifyContent: "space-between", alignItems: "center", paddingHorizontal: 10, marginBottom: 10, marginHorizontal: 10}}>
-          
-          <View style={{ flexDirection: "row", alignItems:'center' }}>
-            <CheckBox
-              style={styles.check}
-              value={item.done}
-              onValueChange={() => this.onHandleCheckbox(item.id)}
-            />
-            <Text style={styles.textList}>{item.name}</Text>
+              <Text style={styles.textList}>
+                {item.name}
+              </Text>
+                    
+              <TouchableOpacity onPress={() => this.onHandledEdit(item.id, item.name)}>
+                <Fa name='edit' style={styles.btnAdd} />
+              </TouchableOpacity>
+                    
+              <TouchableOpacity onPress={() => this.onHandleDelete(item.id)}>
+                <Fa name='trash' style={styles.btnDel} />
+              </TouchableOpacity> 
           </View>
-          
-          <TouchableOpacity onPress={() => this.onDelete(item.id)} >
-            <Fa name='trash' size={18} color='#E91E63' />
-          </TouchableOpacity>
-
-        </View>
-      )
+        </ScrollView>
+      );
     })
   }
 
-  //Cheklist
+  onHandleAdd = (text) => {
+    this.setState({data: text})
+  }
+
+  onHandleBtn = (input) =>{
+      if(this.state.data !== ''){
+        if(input == 'Add'){
+            let tambah = this.state.datas.length,
+            newInput = [{
+                id: tambah + 1,
+                name : this.state.data,
+                done : false
+            }]
+            this.setState({datas: [...this.state.datas, ...newInput]});
+            this.setState({data:''})
+        }else if(input == 'Edit'){
+          let name = this.state.editName
+          let index = this.state.datas.findIndex((x) => x.name == name)
+            this.setState((state) => {
+              return state.datas[index].name = state.data
+            })
+            this.setState({data: '', titleBtn: 'Add'})      
+        }
+      }else{
+          alert('Field Tidak Boleh Kosong')
+      }
+      
+  }
+
+  onHandleDelete = (id) =>{
+    this.setState({
+        datas: this.state.datas.filter((datas) => {
+          return datas.id !== id
+        })
+    })
+  }
+
   onHandleCheckbox = (id) =>{  
     let index = this.state.datas.findIndex((item) => item.id == id);
     if (this.state.datas[index].done == false) {
@@ -58,37 +98,9 @@ class Add extends Component {
     }
   }
 
-  //hapus data
-  onDelete = (id) =>{
-    this.setState({
-        datas: this.state.datas.filter((datas) => {
-          return datas.id !== id
-        })
-    })
-  }
-
-  //inputan data
-  onHandleAdd = (text) => {
-    this.setState({data: text})
-  }
-
-  //masukkan inputan data ke list
-  inputBtn = () =>{
-    if(this.state.data !== ''){
-      let addItem = this.state.datas.length,
-      newInput = [{
-        id: addItem + 1,
-        name: this.state.data,
-        done: false
-      }]
-      
-      this.setState({datas: [...this.state.datas, ...newInput]});
-      this.setState({data: ''})
-
-    }else{
-      alert('Field can not be empty')
-    }
-
+  onHandledEdit = (id, name) =>{
+    this.setState({data : name, titleBtn: 'Edit', editName: name})
+    this.setState({editItem: (id -1)})
   }
 
 
@@ -97,28 +109,27 @@ class Add extends Component {
     return (
 
       <View>
-        
-        <View style={styles.header}>
-          <Text style={styles.headerText}>TODO APP</Text>
-        </View>
 
         <View style={styles.direc}>
               
-          <TextInput style={styles.inputTxt} placeholder='Type Here' type='text' onChangeText={(text) => this.onHandleAdd(text)} value={this.state.data}
+          <TextInput style={styles.inputTxt}
+            placeholder='New todo'
+            type='text'
+            onChangeText={(text) => this.onHandleAdd(text)} value={this.state.data}
           />
-
-          <TouchableOpacity style={styles.button}>
-              <Text style={styles.textButton} onPress={this.inputBtn} >Add</Text>
+            
+          <TouchableOpacity style={styles.btn}>
+              <Text
+              style={styles.textOne}
+              onPress={() => this.onHandleBtn(this.state.titleBtn)}
+              >{this.state.titleBtn}</Text>
           </TouchableOpacity>
 
                  
         </View>
-        
-        <ScrollView>
-          {this.viewLists()} 
-        </ScrollView>
             
-
+        {this.viewList()}
+            
       </View>
           
       
@@ -128,45 +139,29 @@ class Add extends Component {
 }
 
 const styles = StyleSheet.create({
-  header: {
-    backgroundColor: '#E91E63',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderBottomWidth: 10,
-    borderBottomColor: '#ddd'
-  },
-
-  headerText: {
-    color: 'white',
-    fontSize: 18,
-    padding: 26,
-  },
-
   textList: {
     fontSize: 28,
-    marginBottom: 5,
+    flex:8,
+    paddingTop:30,
   },
-
   inputTxt:{
     width:'80%',
-    borderColor:'red',
-    marginRight: 3,
-    marginTop: 10,
+    borderColor:'#E91E63',
     height:50,
     borderWidth:2,
     fontSize:18,
+    marginTop:10,
+    marginRight:5,
 
   },
-  button:{
+  btn:{
     borderRadius:2,
     backgroundColor:'#E91E63',
-    marginTop: 10,
-    height:50,
     width:70,
     height:50,
+    marginTop:10,
   },
-  
-  textButton:{
+  textOne:{
     textAlign:'center',
     justifyContent:'center',
     fontWeight:'bold',
@@ -179,7 +174,37 @@ const styles = StyleSheet.create({
     paddingBottom:50,
     alignItems:'center',
     
+    
   },
+  direcL:{
+      flexDirection:'row',
+      borderBottomWidth:2,
+      borderWidth: 1,
+      marginBottom: 10,
+      borderColor: '#E91E63',
+  },
+  btnDel:{
+      fontSize:30,
+      marginTop:20,
+      padding:10,
+      color:'#E91E63',
+      
+  },
+  btnAdd:{
+    fontSize:30,
+    marginTop:20,
+    padding:10,
+    color:'#E91E63',
+    
+},
+  txtEdDl:{
+      textAlign:'center',
+      paddingTop:7,
+  },
+  check:{
+    marginTop:35,
+  }
 })
+
 
 export default Add;
