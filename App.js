@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, StyleSheet, TextInput, TouchableOpacity, Button, ScrollView } from 'react-native'
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Button, ScrollView, CheckBox } from 'react-native'
 import Fa from 'react-native-vector-icons/FontAwesome5';
 
 class Add extends Component {
@@ -10,11 +10,11 @@ class Add extends Component {
     //list data
     this.state = {
       datas: [
-        {id: 1, name: 'Work'},
-        {id: 2, name: 'Swim'},
-        {id: 3, name: 'Play'},
-        {id: 4, name: 'Sleep'},
-        {id: 5, name: 'Run'},
+        {id: 1, name: 'Work', done: false},
+        {id: 2, name: 'Swim', done: false},
+        {id: 3, name: 'Play', done: false},
+        {id: 4, name: 'Sleep', done: false},
+        {id: 5, name: 'Run', done: false},
       ],
       data: '',
     }
@@ -25,13 +25,37 @@ class Add extends Component {
     return this.state.datas.map((item, index) => {
       return(
         <View style={{flexDirection: "row", flex: 1, borderWidth: 1, borderColor: "#E91E63", justifyContent: "space-between", alignItems: "center", paddingHorizontal: 10, marginBottom: 10, marginHorizontal: 10}}>
-          <Text style={styles.textList}>{item.name}</Text>
+          
+          <View style={{ flexDirection: "row", alignItems:'center' }}>
+            <CheckBox
+              style={styles.check}
+              value={item.done}
+              onValueChange={() => this.onHandleCheckbox(item.id)}
+            />
+            <Text style={styles.textList}>{item.name}</Text>
+          </View>
+          
           <TouchableOpacity onPress={() => this.onDelete(item.id)} >
             <Fa name='trash' size={18} color='#E91E63' />
           </TouchableOpacity>
+
         </View>
       )
     })
+  }
+
+  //Cheklist
+  onHandleCheckbox = (id) =>{  
+    let index = this.state.datas.findIndex((item) => item.id == id);
+    if (this.state.datas[index].done == false) {
+      this.setState((state) => {
+        return state.datas[index].done = true
+      })
+    } else {
+      this.setState((state) => {
+        return state.datas[index].done = false
+      })
+    }
   }
 
   //hapus data
@@ -54,7 +78,8 @@ class Add extends Component {
       let addItem = this.state.datas.length,
       newInput = [{
         id: addItem + 1,
-        name: this.state.data
+        name: this.state.data,
+        done: false
       }]
       
       this.setState({datas: [...this.state.datas, ...newInput]});
