@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Button, ScrollView } from 'react-native'
+import Fa from 'react-native-vector-icons/FontAwesome5';
 
 class Add extends Component {
 
@@ -9,11 +10,11 @@ class Add extends Component {
     //list data
     this.state = {
       datas: [
-        {id: 1, activity: 'Work'},
-        {id: 2, activity: 'Swim'},
-        {id: 3, activity: 'Play'},
-        {id: 4, activity: 'Sleep'},
-        {id: 5, activity: 'Run'},
+        {id: 1, name: 'Work'},
+        {id: 2, name: 'Swim'},
+        {id: 3, name: 'Play'},
+        {id: 4, name: 'Sleep'},
+        {id: 5, name: 'Run'},
       ],
       data: '',
     }
@@ -21,12 +22,24 @@ class Add extends Component {
 
   //Buat View List
   viewLists = () => {
-    return this.state.datas.map((item) => {
+    return this.state.datas.map((item, index) => {
       return(
-        <View>
-          <Text style={styles.textList}>{item.activity}</Text>
+        <View style={{flexDirection: "row", flex: 1, borderWidth: 1, borderColor: "#E91E63", justifyContent: "space-between", alignItems: "center", paddingHorizontal: 10, marginBottom: 10, marginHorizontal: 10}}>
+          <Text style={styles.textList}>{item.name}</Text>
+          <TouchableOpacity onPress={() => this.onDelete(item.id)} >
+            <Fa name='trash' size={18} color='#E91E63' />
+          </TouchableOpacity>
         </View>
       )
+    })
+  }
+
+  //hapus data
+  onDelete = (id) =>{
+    this.setState({
+        datas: this.state.datas.filter((datas) => {
+          return datas.id !== id
+        })
     })
   }
 
@@ -38,9 +51,15 @@ class Add extends Component {
   //masukkan inputan data ke list
   inputBtn = () =>{
     if(this.state.data !== ''){
-      let insert = this.state.datas.concat(this.state.data)
-      this.setState({datas: insert})
+      let addItem = this.state.datas.length,
+      newInput = [{
+        id: addItem + 1,
+        name: this.state.data
+      }]
+      
+      this.setState({datas: [...this.state.datas, ...newInput]});
       this.setState({data: ''})
+
     }else{
       alert('Field can not be empty')
     }
@@ -100,9 +119,7 @@ const styles = StyleSheet.create({
 
   textList: {
     fontSize: 28,
-    borderWidth: 1,
     marginBottom: 5,
-    borderColor: '#E91E63'
   },
 
   inputTxt:{
