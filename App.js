@@ -9,14 +9,25 @@ class Add extends Component {
     //list data
     this.state = {
       datas: [
-        'work',
-        'swim',
-        'study',
-        'sleep',
-        'run',
+        {id: 1, activity: 'Work'},
+        {id: 2, activity: 'Swim'},
+        {id: 3, activity: 'Play'},
+        {id: 4, activity: 'Sleep'},
+        {id: 5, activity: 'Run'},
       ],
       data: '',
     }
+  }
+
+  //Buat View List
+  viewLists = () => {
+    return this.state.datas.map((item) => {
+      return(
+        <View>
+          <Text style={styles.textList}>{item.activity}</Text>
+        </View>
+      )
+    })
   }
 
   //inputan data
@@ -31,7 +42,7 @@ class Add extends Component {
       this.setState({datas: insert})
       this.setState({data: ''})
     }else{
-      alert('Field Tidak boleh kosong!')
+      alert('Field can not be empty')
     }
 
   }
@@ -60,9 +71,7 @@ class Add extends Component {
         </View>
         
         <ScrollView>
-          {this.state.datas.map((item) => 
-            <Text style={styles.textList}>{item}</Text>)
-          }
+          {this.viewLists()} 
         </ScrollView>
             
 
