@@ -31,7 +31,7 @@ class Add extends Component {
       this.setState({datas: insert})
       this.setState({data: ''})
     }else{
-      alert('Field Tidak boleh kosong!')
+      alert('Field can not be empty!')
     }
 
   }
