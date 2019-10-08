@@ -6,7 +6,6 @@ class Add extends Component {
 
   constructor(props) {
     super(props)
-
     this.state = {
       datas: [
         {id:1, name:'Work', done: true },
@@ -21,27 +20,28 @@ class Add extends Component {
       editName:''
     }
   }
+
   viewList = () => {
     return this.state.datas.map((item) => {
       return (
         <ScrollView>
           <View style={styles.direcL}>
-              <CheckBox
-                value={item.done}
-                onValueChange={() => this.onHandleCheckbox(item.id)}
-              />
+            <CheckBox
+              value={item.done}
+              onValueChange={() => this.onHandleCheckbox(item.id)}
+            />
 
-              <Text style={styles.textList}>
-                {item.name}
-              </Text>
+            <Text style={styles.textList}>
+              {item.name}
+            </Text>
                     
-              <TouchableOpacity onPress={() => this.onHandledEdit(item.id, item.name)}>
-                <Fa name='edit' style={styles.btnAdd} />
-              </TouchableOpacity>
+            <TouchableOpacity onPress={() => this.onHandledEdit(item.id, item.name)}>
+              <Fa name='edit' style={styles.btnAdd} />
+            </TouchableOpacity>
                     
-              <TouchableOpacity onPress={() => this.onHandleDelete(item.id)}>
-                <Fa name='trash' style={styles.btnDel} />
-              </TouchableOpacity> 
+            <TouchableOpacity onPress={() => this.onHandleDelete(item.id)}>
+              <Fa name='trash' style={styles.btnDel} />
+            </TouchableOpacity> 
           </View>
         </ScrollView>
       );
@@ -53,35 +53,34 @@ class Add extends Component {
   }
 
   onHandleBtn = (input) =>{
-      if(this.state.data !== ''){
-        if(input == 'Add'){
-            let tambah = this.state.datas.length,
-            newInput = [{
-                id: tambah + 1,
-                name : this.state.data,
-                done : false
-            }]
-            this.setState({datas: [...this.state.datas, ...newInput]});
-            this.setState({data:''})
-        }else if(input == 'Edit'){
-          let name = this.state.editName
-          let index = this.state.datas.findIndex((x) => x.name == name)
-            this.setState((state) => {
-              return state.datas[index].name = state.data
-            })
-            this.setState({data: '', titleBtn: 'Add'})      
-        }
-      }else{
-          alert('Field Tidak Boleh Kosong')
+    if(this.state.data !== ''){
+      if(input == 'Add'){
+        let plus = this.state.datas.length,
+          newInput = [{
+            id: plus + 1,
+            name : this.state.data,
+            done : false
+          }]
+        this.setState({datas: [...this.state.datas, ...newInput]});
+        this.setState({data:''})
+      }else if(input == 'Edit'){
+        let name = this.state.editName
+        let index = this.state.datas.findIndex((x) => x.name == name)
+        this.setState((state) => {
+          return state.datas[index].name = state.data
+        })
+        this.setState({data: '', titleBtn: 'Add'})      
       }
-      
+    }else{
+      alert('Field Tidak Boleh Kosong')
+    }
   }
 
   onHandleDelete = (id) =>{
     this.setState({
-        datas: this.state.datas.filter((datas) => {
-          return datas.id !== id
-        })
+      datas: this.state.datas.filter((datas) => {
+        return datas.id !== id
+      })
     })
   }
 
@@ -105,13 +104,9 @@ class Add extends Component {
 
 
   render() {
-
     return (
-
       <View>
-
-        <View style={styles.direc}>
-              
+        <View style={styles.direc}> 
           <TextInput style={styles.inputTxt}
             placeholder='New todo'
             type='text'
@@ -119,23 +114,18 @@ class Add extends Component {
           />
             
           <TouchableOpacity style={styles.btn}>
-              <Text
+            <Text
               style={styles.textOne}
               onPress={() => this.onHandleBtn(this.state.titleBtn)}
-              >{this.state.titleBtn}</Text>
-          </TouchableOpacity>
-
-                 
+            >{this.state.titleBtn}</Text>
+          </TouchableOpacity>   
         </View>
             
         {this.viewList()}
             
       </View>
-          
-      
     )
   }
-
 }
 
 const styles = StyleSheet.create({
@@ -173,33 +163,29 @@ const styles = StyleSheet.create({
     justifyContent:'center',
     paddingBottom:50,
     alignItems:'center',
-    
-    
   },
   direcL:{
-      flexDirection:'row',
-      borderBottomWidth:2,
-      borderWidth: 1,
-      marginBottom: 10,
-      borderColor: '#E91E63',
+    flexDirection:'row',
+    borderBottomWidth:2,
+    borderWidth: 1,
+    marginBottom: 10,
+    borderColor: '#E91E63',
   },
   btnDel:{
-      fontSize:30,
-      marginTop:20,
-      padding:10,
-      color:'#E91E63',
-      
+    fontSize:30,
+    marginTop:20,
+    padding:10,
+    color:'#E91E63', 
   },
   btnAdd:{
     fontSize:30,
     marginTop:20,
     padding:10,
     color:'#E91E63',
-    
-},
+  },
   txtEdDl:{
-      textAlign:'center',
-      paddingTop:7,
+    textAlign:'center',
+    paddingTop:7,
   },
   check:{
     marginTop:35,
